@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
 using GolBet.Entities;
 using GolBet.Services.DTOs;
 
@@ -8,6 +9,12 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
+       
         CreateMap<Match, MatchDto>();
+
+       
+        CreateMap<Match, MatchDetailDto>()
+            .ForMember(dto => dto.TotalBets,
+                       options => options.MapFrom(match => match.Bets.Count));
     }
 }
