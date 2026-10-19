@@ -1,15 +1,11 @@
 ﻿using GolBet.Entities;
 using GolBet.Entities.Common;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GolBet.Repositories.Data;
-    public class AppDbContext : DbContext
+
+public class AppDbContext : IdentityDbContext<AppUser>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -19,7 +15,7 @@ namespace GolBet.Repositories.Data;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
+        base.OnModelCreating(modelBuilder);  
 
         modelBuilder.Entity<Team>()
             .Property(t => t.Name)
@@ -45,6 +41,21 @@ namespace GolBet.Repositories.Data;
             .HasOne(b => b.Match)
             .WithMany(m => m.Bets)
             .OnDelete(DeleteBehavior.Restrict);
+
+
+        modelBuilder.Entity<Bet>()
+            .HasOne(b => b.User)
+            .WithMany(u => u.Bets)
+            .HasForeignKey(b => b.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Bet>()
+            .HasIndex(b => new { b.MatchId, b.UserId, b.Pick })
+            .IsUnique();
+
+        modelBuilder.Entity<AppUser>()
+            .Property(u => u.Balance)
+            .HasPrecision(12, 2);
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -60,7 +71,6 @@ namespace GolBet.Repositories.Data;
                     break;
                 case EntityState.Modified:
                     entry.Entity.ModifiedDate = utcNow;
-                    // CreatedDate must never change after creation
                     entry.Property(e => e.CreatedDate).IsModified = false;
                     break;
             }
