@@ -6,7 +6,7 @@ public class MatchDto
 {
     public int Id { get; set; }
 
-    public DateTime Date { get; set; }              // UTC; the view converts
+    public DateTime Date { get; set; }              
     public MatchStatus Status { get; set; }
 
     public string HomeTeamName { get; set; } = null!;

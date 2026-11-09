@@ -27,7 +27,7 @@ public class TeamsController : Controller
 
         await _teamService.CreateAsync(dto);
         TempData["Success"] = $"Equipo «{dto.Name}» creado correctamente.";
-        return RedirectToAction(nameof(Index));       // PRG
+        return RedirectToAction(nameof(Index));      
     }
 
     public async Task<IActionResult> Edit(int id)

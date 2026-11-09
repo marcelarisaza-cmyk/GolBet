@@ -10,5 +10,5 @@ public interface IGenericRepository<T> where T : AuditableEntity
 
     Task<T> AddAsync(T entity);
     Task UpdateAsync(T entity);
-    Task DeactivateAsync(int id);   // logical delete: IsActive = false
+    Task DeactivateAsync(int id);   
 }

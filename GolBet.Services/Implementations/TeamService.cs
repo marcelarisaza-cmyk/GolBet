@@ -34,7 +34,7 @@ public class TeamService : ITeamService
         var team = await _teamRepository.GetByIdAsync(dto.Id)
             ?? throw new KeyNotFoundException($"Team {dto.Id} not found.");
 
-        _mapper.Map(dto, team);   // applies dto values onto the tracked entity
+        _mapper.Map(dto, team);  
         await _teamRepository.UpdateAsync(team);
     }
 
